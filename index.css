@@ -1,3 +1,55 @@
-#heading {
-    color: red
+.header {
+    display: flex;
+    /*to make the divs in a horizontal line*/
+    justify-content: space-between;
+    /* space in b/w the two divs */
+    border: 1px solid black;
+}
+
+.logo {
+    width: 200px;
+    /*Adjust the size of Logo image*/
+}
+
+.nav-items>ul {
+    display: flex;
+    /*Make the list items in a single horizontal line */
+    list-style-type: none;
+    /*To remove the list's dots */
+    padding: 0px 20px;
+    /*padding top & bottom - padding left & right*/
+    font-size: 27px;
+}
+
+.nav-items>ul>li {
+    padding: 10px;
+    margin: 10px;
+}
+
+.res-card {
+    margin: 5px;
+    width: 250px;
+    /* height: 350px; */
+    /* border: 1px solid black; */
+    padding: 5px;
+}
+
+.res-card:hover {
+    cursor: pointer;
+    border: 1px solid black;
+}
+
+.search {
+    padding: 10px;
+}
+
+.res-logo {
+    /* padding: 5px; */
+    width: 100%;
+}
+
+.res-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
 }
