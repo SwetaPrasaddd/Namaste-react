@@ -1,60 +1,64 @@
 import RestaurantCard from "./RestaurantCard.js";
-// import resList from "../utils/mockData.js"
-
-import { useState } from "react";
+import Shimmer from "./Shimmer.js";
+import { useState, useEffect } from "react";
 
 const Body = () => {
     //local state variable
-    const [listOfRestaurants, setlistOfrestaurants] = useState([{
-        "avgRating": "3.7",
-        "cuisines": ["Pizzas", "Italian", "Pastas", "Desserts"],
-        "name": "Domino's Pizza",
-        "cloudinaryImageId": "d0450ce1a6ba19ea60cd724471ed54a8",
-    },
-    {
-        "avgRating": "4.7",
-        "cuisines": ["Pizzas", "Italian", "Desserts"],
-        "name": "KFC",
-        "cloudinaryImageId": "d0450ce1a6ba19ea60cd724471ed54a8",
-    },
-    {
-        "avgRating": "4.1",
-        "cuisines": ["Pizzas", "Desserts"],
-        "name": "Momo Hut",
-        "cloudinaryImageId": "d0450ce1a6ba19ea60cd724471ed54a8",
-    }]);
+    const [listOfRestaurants, setlistOfrestaurants] = useState([]);
+    const [filteredRest, setFilteredRest] = useState([]);
 
-    //     let listOfRestaurants = [{
-    //         "avgRating": "3.7",
-    //         "cuisines": ["Pizzas", "Italian", "Pastas", "Desserts"],
-    //         "name": "Domino's Pizza",
-    //         "cloudinaryImageId": "d0450ce1a6ba19ea60cd724471ed54a8",
-    //     }, {
-    //         "avgRating": "4.7",
-    //         "cuisines": ["Pizzas", "Italian", "Desserts"],
-    //         "name": "KFC",
-    //         "cloudinaryImageId": "d0450ce1a6ba19ea60cd724471ed54a8",
-    //     }, {
-    //         "avgRating": "4.1",
-    //         "cuisines": ["Pizzas", "Desserts"],
-    //         "name": "Momo Hut",
-    //         "cloudinaryImageId": "d0450ce1a6ba19ea60cd724471ed54a8",
-    //     }];
+    const [searchText, setSearchText] = useState("");
+    // console.log("body rendered");
+    console.log(listOfRestaurants);
+    useEffect(() => {
+        fetchData();
+    }, []);
 
-    return (
+    const fetchData = async () => {
+        const data = await fetch("https://www.swiggy.com/dapi/restaurants/list/v5?lat=19.0759837&lng=72.8776559&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING");
+        const json = await data.json();
+        // console.log(json);
+        setlistOfrestaurants(json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
+        setFilteredRest(json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
+
+    }
+
+    return listOfRestaurants.length === 0 ? <Shimmer /> : (
         <div className="body">
             <div className="filter">
+                <div className="search">
+                    <input type="text"
+                        className="search-box"
+                        value={searchText}
+                        onChange={(e) => {
+                            setSearchText(e.target.value);
+                        }}></input>
+                    <button onClick={() => {
+                        //filter the restaurant cards and update the UI
+                        console.log(searchText);
+                        const filteredRest = listOfRestaurants.filter(
+                            (res) =>
+
+                                res.info.name.toLowerCase().includes(searchText.toLowerCase())
+                        )
+                        // console.log(filteredRest);
+                        setFilteredRest(filteredRest);
+                    }}>Search</button>
+                </div>
                 <button className="filter-btn" onClick={() => {
+                    // console.log(listOfRestaurants);
                     const filteredList = listOfRestaurants.filter(
-                        (res) => res.avgRating > 4
+                        (res) => res?.info?.avgRating > 4.5
                     );
-                    setlistOfrestaurants(filteredList);
+                    // console.log(filteredList);
+                    setFilteredRest(filteredList);
                     // console.log(listOfRestaurants);
                 }}>Top-rated Restaurants</button>
             </div>
+
             <div className="res-container">
                 {
-                    listOfRestaurants.map((restaurants, index) => (
+                    filteredRest.map((restaurants, index) => (
 
                         < RestaurantCard key={index} resData={restaurants} />
                     ))
