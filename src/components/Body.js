@@ -1,15 +1,15 @@
 import RestaurantCard from "./RestaurantCard.js";
 import Shimmer from "./Shimmer.js";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const Body = () => {
     //local state variable
     const [listOfRestaurants, setlistOfrestaurants] = useState([]);
     const [filteredRest, setFilteredRest] = useState([]);
-
     const [searchText, setSearchText] = useState("");
     // console.log("body rendered");
-    console.log(listOfRestaurants);
+    // console.log(listOfRestaurants);
     useEffect(() => {
         fetchData();
     }, []);
@@ -35,7 +35,7 @@ const Body = () => {
                         }}></input>
                     <button onClick={() => {
                         //filter the restaurant cards and update the UI
-                        console.log(searchText);
+                        // console.log(searchText);
                         const filteredRest = listOfRestaurants.filter(
                             (res) =>
 
@@ -60,7 +60,11 @@ const Body = () => {
                 {
                     filteredRest.map((restaurants, index) => (
 
-                        < RestaurantCard key={index} resData={restaurants} />
+                        // < RestaurantCard key={index} resData={restaurants} />
+                        <Link key={restaurants.info.id}
+                            to={"restaurants/" + restaurants.info.id}>
+                            < RestaurantCard resData={restaurants} />
+                        </Link>
                     ))
                 }
             </div>
